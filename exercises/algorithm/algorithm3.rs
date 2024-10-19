@@ -7,6 +7,20 @@
 
 fn sort<T>(array: &mut [T]){
 	//TODO
+    let len = array.len();  
+    for i in 1..len {  
+        let key = array[i];  
+        let j = i as isize;  
+        let mut i = (j - 1) as usize;  
+  
+        // Move elements of array[0..i-1], that are greater than key,  
+        // to one position ahead of their current position  
+        while i > 0 && array[i as isize as usize] > key {  
+            array[(i as isize + 1) as usize] = array[i as usize];  
+            i -= 1;  
+        }  
+        array[(i as isize + 1) as usize] = key;  
+    }  
 }
 #[cfg(test)]
 mod tests {

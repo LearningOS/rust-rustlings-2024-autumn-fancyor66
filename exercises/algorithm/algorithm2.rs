@@ -7,6 +7,7 @@
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
 use std::vec::*;
+use std::mem::swap;
 
 #[derive(Debug)]
 struct Node<T> {
@@ -74,6 +75,15 @@ impl<T> LinkedList<T> {
     }
 	pub fn reverse(&mut self){
 		// TODO
+        let mut curr_p=self.start;
+        swap(&mut self.start,&mut self.end);
+        while let Some(node) =curr_p{
+            let next_p=unsafe{(*node.as_ptr()).next};
+            unsafe{
+                swap(&mut (*node.as_ptr()).prev,&mut (*node.as_ptr()).next);
+            curr_p=next_p;
+            }
+        }
 	}
 }
 
