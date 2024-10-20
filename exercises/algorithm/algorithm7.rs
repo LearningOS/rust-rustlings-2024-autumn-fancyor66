@@ -32,7 +32,8 @@ impl<T> Stack<T> {
 	}
 	fn pop(&mut self) -> Option<T> {
 		// TODO
-		None
+		//None
+		self.data.pop()
 	}
 	fn peek(&self) -> Option<&T> {
 		if 0 == self.size {
@@ -102,7 +103,24 @@ impl<'a, T> Iterator for IterMut<'a, T> {
 fn bracket_match(bracket: &str) -> bool
 {
 	//TODO
-	true
+	//true
+	let opening = "([{<".chars().collect::<std::collections::HashSet<char>>();  
+    let closing = ")]}>".chars().collect::<std::collections::HashSet<char>>();  
+    let pairs = [('(', ')'), ('[', ']'), ('{', '}'), ('<', '>')];  
+    let mut stack = Stack::new();  
+  
+    for ch in bracket.chars() {  
+        if opening.contains(&ch) {  
+            stack.push(ch);  
+        } else if closing.contains(&ch) {  
+            match stack.pop() {  
+                Some(open) if pairs.iter().any(|&(open_pair, close_pair)| open_pair == open && close_pair == ch) => continue,  
+                _ => return false,  
+            }  
+        }  
+    }  
+  
+    stack.is_empty()  
 }
 
 #[cfg(test)]

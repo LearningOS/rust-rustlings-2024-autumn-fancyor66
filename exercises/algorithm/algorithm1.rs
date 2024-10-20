@@ -77,23 +77,50 @@ impl<T: std::cmp::PartialOrd> LinkedList<T> {
             start: None,
             end: None,
         }*/
-        let la=list_a.length;
+        /*let la=list_a.length;
         let lb=list_b.length;
         let mut ca=0;
         let mut cb=0;
 
         let mut res =Self::new();
 
-        for _ in 0..(la+ lb)
+        for _ in 1..(la+ lb)
         { 
-            if lb ==cb || ca < la && cb < lb&& *(list_a.get(ca.try_into().unwrap()).unwrap())<*(list_b.get(cb.try_into().unwrap()).unwrap()) {
-                res.add(list_a.get(ca).as_deref());
+            if ca < la && cb < lb&& *(list_a.get(ca.try_into().unwrap()).unwrap())<*(list_b.get(cb.try_into().unwrap()).unwrap()) {
+                res.add(*(<LinkedList<T> as TryInto<T>>::try_into(list_a).unwrap()));
                 ca+=1;
             }else{
-                res.add(list_b.get(cb).as_deref());
+                res.add(*(list_b.try_into().unwrap()));
                 cb+=1;
             }
         }
+        res*/
+        let mut res = LinkedList::new();  
+        let mut a_ptr = list_a.start;  
+        let mut b_ptr = list_b.start;  
+  
+        while let (Some(a), Some(b)) = (a_ptr.as_ref(), b_ptr.as_ref()) {  
+            if a.val <= b.val {  
+                res.add(a.val);  
+                a_ptr = unsafe { a.next };  
+            } else {  
+                res.add(b.val);  
+                b_ptr = unsafe { b.next };  
+            }  
+        }  
+  
+        // Append remaining elements from list_a  
+        while let Some(a) = a_ptr.as_ref() {  
+            res.add(a.val);  
+            a_ptr = unsafe { a.next };  
+        }  
+  
+        // Append remaining elements from list_b  
+        while let Some(b) = b_ptr.as_ref() {  
+            res.add(b.val);  
+            b_ptr = unsafe { b.next };  
+        }  
+  
         res
 	}
 }

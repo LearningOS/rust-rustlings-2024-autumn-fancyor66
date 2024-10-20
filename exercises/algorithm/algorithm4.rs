@@ -50,8 +50,116 @@ where
 
     // Insert a value into the BST
     fn insert(&mut self, value: T) {
+
+        let new_node = Box::new(TreeNode {  
+            value,  
+            left: None,  
+            right: None,  
+        });  
+  
+        fn insert_recursive(node: &mut Option<Box<TreeNode<T>>>, new_value: T) {  
+            match node {  
+                Some(ref mut current_node) => {  
+                    if new_value < current_node.value {  
+                        insert_recursive(&mut current_node.left, new_value);  
+                    } else if new_value > current_node.value {  
+                        insert_recursive(&mut current_node.right, new_value);  
+                    }  
+                    // Do nothing if values are equal (no duplicates allowed)  
+                }  
+                None => {  
+                    *node = Some(new_node);  
+                }  
+            }  
+        }  
+  
+        insert_recursive(&mut self.root, value);  
+
+
         //TODO
+        /*let r=self.root;
+        let pre:=None<Box<TreeNode<T>>>;
+        while  r!=None {*/
+            /*if value<=*(r.Deref()).value{
+                r=*(a.Deref()).left;
+            }else{
+                r=*(a.Deref()).right;
+            }*/
+            
+            /*let t=Some(Box::new(TreeNode::new(value)));
+            let r=root;*/
+            //while let Some(a)=r {
+                /*if value<=*(r.Deref()).value{
+                    r=*(a.Deref()).left;
+                }else{
+                    r=*(a.Deref()).right;
+                }*/
+                /*pre=Some(a);
+                if value<=a.deref().value {
+                    r=a.deref().left;
+                }else{
+                    r=a.deref().right;
+                }
+            }
+            
+        }
+            if let value <= pre.unwarp().deref().value {
+                pre.left=Some(Box::new(TreeNode::new(value)));
+            }else{
+                pre.right=Some(Box::new(TreeNode::new(value)));
+            }*/
+
+
+
+            /*let new_node = Rc::new(RefCell::new(TreeNode {  
+                value,  
+                left: None,  
+                right: None,  
+            }));  
+      
+            let mut root_node = Rc::clone(&new_node);  
+      
+            fn insert_recursive(  
+                root: &mut Option<Rc<RefCell<TreeNode<T>>>>,  
+                new_value: Rc<RefCell<TreeNode<T>>>,  
+            ) {  
+                match root {  
+                    Some(node_ref) => {  
+                        let node_mut = node_ref.borrow_mut();  
+                        match new_value.borrow().value.cmp(&node_mut.value) {  
+                            Ordering::Less => {  
+                                match &mut node_mut.left {  
+                                    Some(left_child) => {  
+                                        insert_recursive(&mut Some(Rc::clone(left_child)), new_value);  
+                                    }  
+                                    None => {  
+                                        node_mut.left = Some(Rc::clone(&new_value));  
+                                    }  
+                                }  
+                            }  
+                            Ordering::Greater => {  
+                                match &mut node_mut.right {  
+                                    Some(right_child) => {  
+                                        insert_recursive(&mut Some(Rc::clone(right_child)), new_value);  
+                                    }  
+                                    None => {  
+                                        node_mut.right = Some(Rc::clone(&new_value));  
+                                    }  
+                                }  
+                            }  
+                            Ordering::Equal => {} // 不插入重复的值  
+                        }  
+                    }  
+                    None => {  
+                        *root = Some(Rc::clone(&new_node));  
+                    }  
+                }  
+            }  
+      
+            insert_recursive(&mut self.root, root_node);  */
     }
+        
+    
 
     // Search for a value in the BST
     fn search(&self, value: T) -> bool {

@@ -56,26 +56,55 @@ pub struct myStack<T>
 {
 	//TODO
 	q1:Queue<T>,
-	q2:Queue<T>
+	q2:Queue<T>,
+    current_is_q1: bool,
 }
 impl<T> myStack<T> {
     pub fn new() -> Self {
         Self {
 			//TODO
 			q1:Queue::<T>::new(),
-			q2:Queue::<T>::new()
+			q2:Queue::<T>::new(),
+            current_is_q1: true,
         }
     }
     pub fn push(&mut self, elem: T) {
         //TODO
+        if self.current_is_q1 {  
+            self.q1.enqueue(elem);  
+        } else {  
+            self.q2.enqueue(elem);  
+        }  
     }
     pub fn pop(&mut self) -> Result<T, &str> {
         //TODO
-		Err("Stack is empty")
+		//Err("Stack is empty")
+        if self.current_is_q1 {  
+            if self.q1.is_empty() {  
+                return Err("Stack is empty");  
+            }  
+            // 将 q1 的元素移动到 q2，除了最后一个  
+            while self.q1.size() > 1 {  
+                self.q2.enqueue(self.q1.dequeue().unwrap());  
+            }  
+            // q1 现在只剩一个元素，弹出并返回  
+            Ok(self.q1.dequeue().unwrap())  
+        } else {  
+            if self.q2.is_empty() {  
+                return Err("Stack is empty");  
+            }  
+            // 将 q2 的元素移动到 q1，除了最后一个  
+            while self.q2.size() > 1 {  
+                self.q1.enqueue(self.q2.dequeue().unwrap());  
+            }  
+            // q2 现在只剩一个元素，弹出并返回  
+            Ok(self.q2.dequeue().unwrap())  
+        }  
     }
     pub fn is_empty(&self) -> bool {
 		//TODO
-        true
+        //true
+        self.q1.is_empty() && self.q2.is_empty()  
     }
 }
 
