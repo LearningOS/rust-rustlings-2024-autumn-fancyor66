@@ -2,7 +2,7 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
+
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
@@ -31,17 +31,17 @@ struct LinkedList<T> {
 
 impl<T> Default for LinkedList<T> {
     fn default() -> Self {
-        Self::new()
-    }
-}
-
-impl<T: std::cmp::PartialOrd> LinkedList<T> {
-    pub fn new() -> Self {
         Self {
             length: 0,
             start: None,
             end: None,
         }
+    }
+}
+
+impl<T: std::cmp::PartialOrd+Clone> LinkedList<T> {
+    pub fn new() -> Self {
+        Self::default()
     }
 
     pub fn add(&mut self, obj: T) {
@@ -95,34 +95,63 @@ impl<T: std::cmp::PartialOrd> LinkedList<T> {
             }
         }
         res*/
-        let mut res = LinkedList::new();  
+        /*let mut res = LinkedList::default();  
         let mut a_ptr = list_a.start;  
         let mut b_ptr = list_b.start;  
   
         while let (Some(a), Some(b)) = (a_ptr.as_ref(), b_ptr.as_ref()) {  
-            if a.val <= b.val {  
-                res.add(a.val);  
-                a_ptr = unsafe { a.next };  
+            if unsafe{a.as_ref()}.val <= unsafe{b.as_ref()}.val {  
+                res.add(unsafe{a.as_ref()}.val.clone());  
+                a_ptr = unsafe { a.as_ref().next };  
             } else {  
-                res.add(b.val);  
-                b_ptr = unsafe { b.next };  
+                res.add(unsafe{b.as_ref()}.val.clone()); 
+                b_ptr = unsafe { b.as_ref().next };  
             }  
         }  
   
         // Append remaining elements from list_a  
         while let Some(a) = a_ptr.as_ref() {  
-            res.add(a.val);  
-            a_ptr = unsafe { a.next };  
+            res.add(unsafe{a.as_ref()}.val.clone());  
+            a_ptr = unsafe { a.as_ref().next };  
         }  
   
         // Append remaining elements from list_b  
         while let Some(b) = b_ptr.as_ref() {  
-            res.add(b.val);  
-            b_ptr = unsafe { b.next };  
+            let t=(unsafe{b.as_ref()}.val).clone();
+            res.add(t);  
+            b_ptr = unsafe { b.as_ref().next };  
         }  
   
         res
-	}
+	}*/
+    let mut res = LinkedList::default();  
+        let mut a_ptr = list_a.start;  
+        let mut b_ptr = list_b.start;  
+  
+        while let (Some(a), Some(b)) = (a_ptr.as_ref(), b_ptr.as_ref()) {  
+            if unsafe { a.as_ref() }.val <= unsafe { b.as_ref() }.val {  
+                res.add(unsafe { a.as_ref() }.val.clone());  
+                a_ptr = unsafe { a.as_ref().next };  
+            } else {  
+                res.add(unsafe { b.as_ref() }.val.clone()); 
+                b_ptr = unsafe { b.as_ref().next };  
+            }  
+        }  
+  
+        // Append remaining elements from list_a  
+        while let Some(a) = a_ptr.as_ref() {  
+            res.add(unsafe { a.as_ref() }.val.clone());  
+            a_ptr = unsafe { a.as_ref().next };  
+        }  
+  
+        // Append remaining elements from list_b  
+        while let Some(b) = b_ptr.as_ref() {  
+            res.add(unsafe { b.as_ref() }.val.clone());  
+            b_ptr = unsafe { b.as_ref().next };  
+        }  
+  
+        res
+    }
 }
 
 impl<T> Display for LinkedList<T>

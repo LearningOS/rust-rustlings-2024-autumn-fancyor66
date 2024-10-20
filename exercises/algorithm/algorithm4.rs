@@ -3,7 +3,7 @@
 	This problem requires you to implement a basic interface for a binary tree
 */
 
-//I AM NOT DONE
+
 use std::cmp::Ordering;
 use std::fmt::Debug;
 
@@ -51,7 +51,27 @@ where
     // Insert a value into the BST
     fn insert(&mut self, value: T) {
 
-        let new_node = Box::new(TreeNode {  
+
+        fn insert_recursive<T>(node: &mut Option<Box<TreeNode<T>>>, new_value: T)
+        where
+            T: Ord,
+        {
+            match node {
+                Some(ref mut current_node) => {
+                    if new_value < current_node.value {
+                        insert_recursive(&mut current_node.left, new_value);
+                    } else if new_value > current_node.value {
+                        insert_recursive(&mut current_node.right, new_value);
+                    } // Do nothing if values are equal (no duplicates allowed)
+                }
+                None => {
+                    *node = Some(Box::new(TreeNode::new(new_value)));
+                }
+            }
+        }
+
+        insert_recursive(&mut self.root, value);
+        /*let new_node = Box::new(TreeNode {  
             value,  
             left: None,  
             right: None,  
@@ -73,7 +93,7 @@ where
             }  
         }  
   
-        insert_recursive(&mut self.root, value);  
+        insert_recursive(&mut self.root, value);  */
 
 
         //TODO
@@ -164,7 +184,42 @@ where
     // Search for a value in the BST
     fn search(&self, value: T) -> bool {
         //TODO
-        true
+        //true
+        /*fn search_recursive(node: &Option<Box<TreeNode<T>>>, target: &T) -> bool {  
+            match node {  
+                Some(ref current_node) => {  
+                    if target == &current_node.value {  
+                        return true;  
+                    } else if target < &current_node.value {  
+                        return search_recursive(&current_node.left, target);  
+                    } else {  
+                        return search_recursive(&current_node.right, target);  
+                    }  
+                }  
+                None => false,  
+            }  
+        }  
+  
+        search_recursive(&self.root, value) */
+        fn search_recursive<T>(node: &Option<Box<TreeNode<T>>>, target: &T) -> bool
+        where
+            T: Ord,
+        {
+            match node {
+                Some(ref current_node) => {
+                    if target == &current_node.value {
+                        true
+                    } else if target < &current_node.value {
+                        search_recursive(&current_node.left, target)
+                    } else {
+                        search_recursive(&current_node.right, target)
+                    }
+                }
+                None => false,
+            }
+        }
+
+        search_recursive(&self.root, &value)
     }
 }
 
@@ -174,7 +229,7 @@ where
 {
     // Insert a node into the tree
     fn insert(&mut self, value: T) {
-        //TODO
+        //TODO  
     }
 }
 

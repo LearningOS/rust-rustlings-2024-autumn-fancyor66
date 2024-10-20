@@ -2,7 +2,7 @@
 	queue
 	This question requires you to use queues to implement the functionality of the stac
 */
-// I AM NOT DONE
+
 
 #[derive(Debug)]
 pub struct Queue<T> {
@@ -71,34 +71,52 @@ impl<T> myStack<T> {
     pub fn push(&mut self, elem: T) {
         //TODO
         if self.current_is_q1 {  
-            self.q1.enqueue(elem);  
+            while self.q1.size() > 0 {  
+                self.q2.enqueue(self.q1.dequeue().unwrap());  
+            } 
+            self.q1.enqueue(elem); 
+            self.current_is_q1=false;
         } else {  
+            while self.q2.size() > 0 {  
+                self.q1.enqueue(self.q2.dequeue().unwrap());  
+            }  
             self.q2.enqueue(elem);  
+            self.current_is_q1=true;
         }  
     }
     pub fn pop(&mut self) -> Result<T, &str> {
         //TODO
 		//Err("Stack is empty")
-        if self.current_is_q1 {  
+        if !self.current_is_q1 {  
             if self.q1.is_empty() {  
                 return Err("Stack is empty");  
             }  
-            // 将 q1 的元素移动到 q2，除了最后一个  
+            /*// 将 q1 的元素移动到 q2，除了最后一个  
             while self.q1.size() > 1 {  
                 self.q2.enqueue(self.q1.dequeue().unwrap());  
             }  
-            // q1 现在只剩一个元素，弹出并返回  
-            Ok(self.q1.dequeue().unwrap())  
+            // q1 现在只剩一个元素，弹出并返回  */
+
+            let res=self.q1.dequeue().unwrap()  ;
+            if !self.q2.is_empty() {
+            self.q1.enqueue( self.q2.dequeue().unwrap());
+            }
+            Ok(res)
         } else {  
             if self.q2.is_empty() {  
                 return Err("Stack is empty");  
             }  
-            // 将 q2 的元素移动到 q1，除了最后一个  
+            /*// 将 q2 的元素移动到 q1，除了最后一个  
             while self.q2.size() > 1 {  
                 self.q1.enqueue(self.q2.dequeue().unwrap());  
             }  
-            // q2 现在只剩一个元素，弹出并返回  
-            Ok(self.q2.dequeue().unwrap())  
+            // q2 现在只剩一个元素，弹出并返回  */
+            //Ok(self.q2.dequeue().unwrap())  
+            let res=self.q2.dequeue().unwrap()  ;
+            if !self.q1.is_empty() {
+                self.q2.enqueue( self.q1.dequeue().unwrap());
+            }
+            Ok(res)
         }  
     }
     pub fn is_empty(&self) -> bool {
